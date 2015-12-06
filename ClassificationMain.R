@@ -1,7 +1,8 @@
 # This sciprt file contains a frame for learning handwritten digitals from the MNIST dataset
 
+library("pROC")
 # load training data from files
-data <- loadMNISTData("C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\train-images.idx3-ubyte", "C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\train-labels.idx1-ubyte")
+data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\train-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\train-labels.idx1-ubyte")
 trainLabels <- data$labels
 trainData <- data$data
 
@@ -15,8 +16,11 @@ print(dim(trainLabels))
 # image( t(matrix(trainData[n, ], ncol=28, nrow=28)), Rowv=28, Colv=28, col = heat.colors(256),  margins=c(5,10))
 # print("Class label:"); print(trainLabels[n])
 
+# 
+
 # train a model
 classifier <- learnModel(data = trainData, labels = trainLabels)
+
 predictedLabels <- testModel(classifier, trainData)
 
 #calculate accuracy on training data
@@ -28,7 +32,7 @@ print(sum(predictedLabels == trainLabels)/length(trainLabels))
 
 
 # test the model
-data <- loadMNISTData("C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\t10k-images.idx3-ubyte", "C:\\Users\\User\\YandexDisk\\teaching\\advanced_topics_in_machine_learning\\t10k-labels.idx1-ubyte")
+data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\t10k-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\t10k-labels.idx1-ubyte")
 testLabels <- data$labels
 testData <- data$data
 
@@ -45,3 +49,28 @@ print(sum(predictedLabels == testLabels)/length(testLabels))
 
 #calculate the following error metric for each class obtained on the test data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
+TP <- 0*1:10  # True Positive
+TN <- 0*1:10  # True Negative
+FP <- 0*1:10  # Fasle Positive
+FN <- 0*1:10  # False Negative
+for (i in 1:10){
+  predictedLabelClass <- predictedLabels==(i-1)
+  testLabelsClass <- testLabels==(i-1)
+  TP[i] <- sum((predictedLabelClass+testLabelsClass)==2)
+  TN[i] <- sum((predictedLabelClass+testLabelsClass)==0)
+  FP[i] <- sum((predictedLabelClass-testLabelsClass)==1)
+  FN[i] <- sum((predictedLabelClass-testLabelsClass)==-1)
+  plot(roc(as.numeric(testLabelsClass), as.numeric(predictedLabelClass)))
+}
+# Calculate error metrics
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+precision <- TP/(TP+FP)
+specificity <- TP/(TP+FN)
+fmeasure <- 2*TP/(2*TP+FP+FN)
+FDR <- FP/(FP+TP)
+
+print(accuracy)
+print(precision)
+print(specificity)
+print(fmeasure)
+print(FDR)

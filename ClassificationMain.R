@@ -1,6 +1,12 @@
 # This sciprt file contains a frame for learning handwritten digitals from the MNIST dataset
 
 library("pROC")
+source("load_data.R")
+source("learnModel.R")
+source("lrCostFunction.R")
+source("grlrCostfunction.R")
+source("testModel.R")
+source("metrics.R")
 # load training data from files
 data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\train-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\train-labels.idx1-ubyte")
 trainLabels <- data$labels
@@ -29,7 +35,7 @@ print(sum(predictedLabels == trainLabels)/length(trainLabels))
 
 #calculate the following error metric for each class obtained on the train data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
-
+metrics(predictedLabels,trainLabels)
 
 # test the model
 data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\t10k-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\t10k-labels.idx1-ubyte")
@@ -49,28 +55,4 @@ print(sum(predictedLabels == testLabels)/length(testLabels))
 
 #calculate the following error metric for each class obtained on the test data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
-TP <- 0*1:10  # True Positive
-TN <- 0*1:10  # True Negative
-FP <- 0*1:10  # Fasle Positive
-FN <- 0*1:10  # False Negative
-for (i in 1:10){
-  predictedLabelClass <- predictedLabels==(i-1)
-  testLabelsClass <- testLabels==(i-1)
-  TP[i] <- sum((predictedLabelClass+testLabelsClass)==2)
-  TN[i] <- sum((predictedLabelClass+testLabelsClass)==0)
-  FP[i] <- sum((predictedLabelClass-testLabelsClass)==1)
-  FN[i] <- sum((predictedLabelClass-testLabelsClass)==-1)
-  plot(roc(as.numeric(testLabelsClass), as.numeric(predictedLabelClass)))
-}
-# Calculate error metrics
-accuracy <- (TP+TN)/(TP+TN+FP+FN)
-precision <- TP/(TP+FP)
-specificity <- TP/(TP+FN)
-fmeasure <- 2*TP/(2*TP+FP+FN)
-FDR <- FP/(FP+TP)
-
-print(accuracy)
-print(precision)
-print(specificity)
-print(fmeasure)
-print(FDR)
+metrics(predictedLabels,testLabels)

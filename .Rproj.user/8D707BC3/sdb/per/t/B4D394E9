@@ -1,0 +1,17 @@
+{
+    "contents" : "GradientDescent <- function(theta, X, y, lambda){\n  # Find optimum of the function\n  # Realisation of speedest gradient descent\n  eps <- 0.0000001 \n\n  while(TRUE){\n    buff <- theta\n\n    grF <- grlrCostFunction(buff, X, y, lambda)\n    alpha <- GSS(buff, X, y, lambda, grF)\n    \n    theta <- buff - alpha*grF\n    \n    if(sum((buff-theta)^2)<eps){\n      break\n    }\n  }\n  return(theta)\n}",
+    "created" : 1450725966693.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2554073673",
+    "id" : "B4D394E9",
+    "lastKnownWriteTime" : 1450726206,
+    "path" : "~/GitHub/LearnMNIST/GradientDescent.R",
+    "project_path" : "GradientDescent.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

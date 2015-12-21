@@ -1,6 +1,6 @@
 learnModel <- function(data, labels){
   # Learn Logit Regression model
-  lambda <- 0.1
+  lambda <- 0.05
   X <- data
   y <- labels
   
@@ -9,7 +9,7 @@ learnModel <- function(data, labels){
   
   num_labels <- 10
   
-  all_theta <- matrix(data = 0, nrow = num_labels, ncol = n+1, byrow = T)
+  all_theta <- matrix(data = 10, nrow = num_labels, ncol = n+1, byrow = T)
 
   X <- cbind(1, X)
   
@@ -18,11 +18,8 @@ learnModel <- function(data, labels){
   for (i in 1:num_labels){
     temp <- i-1
     print(i)
-    buff <- optim(initial_theta, lrCostFunction, gr = grlrCostFunction, X=X, y=(y==temp), 
-                  lambda=lambda, method = "CG")
-    all_theta[i,] <- buff$par
+    all_theta[i,] <- GradientDescent(initial_theta, X, (y==temp), lambda)
   }
-  
   
   return(all_theta)
   

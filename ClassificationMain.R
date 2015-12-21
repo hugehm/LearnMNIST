@@ -7,8 +7,10 @@ source("lrCostFunction.R")
 source("grlrCostfunction.R")
 source("testModel.R")
 source("metrics.R")
+source("GradientDescent.R")
+source("GSS.R")
 # load training data from files
-data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\train-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\train-labels.idx1-ubyte")
+data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\GitHub\\LearnMNIST\\train-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\GitHub\\LearnMNIST\\train-labels.idx1-ubyte")
 trainLabels <- data$labels
 trainData <- data$data
 
@@ -24,21 +26,21 @@ print(dim(trainLabels))
 
 # 
 
-# train a model
+# train a model (about 35 min on my laptop)
 classifier <- learnModel(data = trainData, labels = trainLabels)
 
 predictedLabels <- testModel(classifier, trainData)
 
 #calculate accuracy on training data
 print("accuracy on training data:\t")
-print(sum(predictedLabels == trainLabels)/length(trainLabels))
+print(sum(predictedLabels == trainLabels)/length(trainLabels)) #accuracy=0.8535
 
 #calculate the following error metric for each class obtained on the train data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
 metrics(predictedLabels,trainLabels)
 
 # test the model
-data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\t10k-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\LearnMNIST-master\\t10k-labels.idx1-ubyte")
+data <- loadMNISTData("C:\\Users\\Gennadij\\Documents\\GitHub\\LearnMNIST\\t10k-images.idx3-ubyte", "C:\\Users\\Gennadij\\Documents\\GitHub\\LearnMNIST\\t10k-labels.idx1-ubyte")
 testLabels <- data$labels
 testData <- data$data
 
@@ -51,7 +53,7 @@ predictedLabels <- testModel(classifier, testData)
 
 #calculate accuracy
 print("accuracy on test data:\t")
-print(sum(predictedLabels == testLabels)/length(testLabels))
+print(sum(predictedLabels == testLabels)/length(testLabels))#accuracy=0.8615
 
 #calculate the following error metric for each class obtained on the test data:
 #Recall, precision, specificity, F-measure, FDR and ROC for each class separately. Use a package for ROC. 
